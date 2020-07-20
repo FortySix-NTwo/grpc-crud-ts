@@ -1,0 +1,42 @@
+version: '3'
+services:
+  users-service:
+    build:
+      context: ./docker/users-service
+      dockerfile: ./Dockerfile
+    image: users-service:latest
+    environment:
+      - PORT="${PORT"
+    depends_on:
+      - postgres
+    networks:
+      - network
+    volumes:
+      - appdata:/opt/app
+    working_dir: /opt/app
+    ports:
+      - PORT:PORT
+    restart: always
+
+  postgres:
+    image: postgres:12.3-alpine
+    environment:
+      - POSTGRES_USER="${POSTGRES_USER}"
+      - POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
+      - POSTGRES_DB="${POSTGRES_DB}"
+      - PG_PORT="${PG_PORT}"
+    networks:
+      - network
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - PG_PORT:PG_PORT
+    restart: always
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  postgres:
+  appdata:
