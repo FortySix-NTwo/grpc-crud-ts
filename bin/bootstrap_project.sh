@@ -263,4 +263,4 @@ git commit -m "Initial Commit - Project Generated With Bash Script"
 git tag v1.0.0
 
 # build dockerfile
-docker build . -t fortySix-NTwo/grpc-api:1.0
+docker build .
