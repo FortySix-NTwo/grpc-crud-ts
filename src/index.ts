@@ -1,14 +1,11 @@
-import { checkDBConnection } from "./persistence";
+import "dotenv/config";
 
-let port = parseInt(process.env.PORT || "");
-if (isNaN(port) || port === 0) {
-  port = 50052;
-}
+import { startServer, stopServer } from "./server/index";
 
-//app.use(async (req: Request, res: Response, next) => {
-//  await checkDBConnection(() => {
-//    res.json({
-//      error: "Database connection error, please try again later",
-//    });
-//  }, next);
-//});
+(async () => {
+  try {
+    startServer();
+  } catch (error) {
+    await stopServer(error);
+  }
+})();

@@ -5,5 +5,4 @@ RUN yarn
 ARG PORT
 ENV PORT=$PORT
 EXPOSE $PORT
-RUN ln -sf /dev/stdout /debug.log
 CMD yarn build && yarn start

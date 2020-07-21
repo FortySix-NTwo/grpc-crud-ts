@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 #################################################################################
 ##               check for unused dependencies in package.json                 ##
 ## ########################################################################### ##
@@ -14,7 +14,7 @@
 ##      LinkedIn:      https://www.linkedin.com/in/jonathan-farber-7197aa19    ##
 ##                                                                             ##
 ##        for more information regarding bash scripts,                         ##
-##        please follow this like -> https://www.gnu.org/software/bash/        ##
+##        please follow this link -> https://www.gnu.org/software/bash/        ##
 #################################################################################
 
 for dependencies in ${jq -r '.dependencies | keys | .[]' package.json}; do

@@ -7,11 +7,8 @@
     "esModuleInterop": true,
     "target": "es6",
     "sourceMap": true,
-    "strict": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "declaration": true
+    "experimentalDecorators": true
   },
   "include": ["./src/**/*"],
-  "exclude": ["node_modules", "./build/**/*"]
+  "exclude": ["node_modules"]
 }

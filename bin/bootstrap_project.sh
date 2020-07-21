@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 ##################################################################################
 ##                    Bootstrap Script for gRPC C.R.U.D. API                    ##
 ##################################################################################
@@ -8,7 +8,7 @@
 ##                   $ bash ./bin/bootstrap_project.sh                          ##
 ##                                                                              ##
 ##               for more information regarding bash scripts,                   ##
-##               please follow this like                                        ##
+##               please follow this link                                        ##
 ##                   -> https://www.gnu.org/software/bash/                      ##
 ##  Note:                                                                       ##
 ##              This script assumes that Git-SCM is installed,                  ##

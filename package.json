@@ -2,28 +2,29 @@
   "name": "grpc-crud-ts",
   "version": "1.0.0",
   "main": "index.js",
+  "repository": "https://github.com/FortySix-NTwo/grpc-crud-ts.git",
   "author": "FortySix-NTwo <jonathankfarber@vivaldi.net>",
   "license": "MIT",
   "scripts": {
-    "build": "rimraf ./dist && npx tsc --skipLibCheck",
-    "start": "yarn build && node ./dist/src/index.js",
+    "build": "npx tsc --skipLibCheck",
+    "start": "npx tsc --skipLibCheck && node ./dist/index.js",
     "start:dev": "nodemon",
-    "gen:protoc": "bash ./bin/protoc_gen_ts.sh"
+    "gen:protoc": "bash ./bin/generate_proto_code.sh"
   },
   "dependencies": {
-    "dotenv": "@^8.2.0",
-    "google-protobuf": "@^3.12.2",
-    "grpc": "@^1.24.3",
+    "dotenv": "^8.2.0",
+    "google-protobuf": "^3.12.2",
+    "grpc": "^1.24.3",
     "typeorm": "^0.2.25"
   },
   "devDependencies": {
-    "@types/dotenv": "@^8.2.0",
-    "@types/google-protobuf": "@^3.7.2",
-    "@types/node": "@^14.0.0",
-    "grpc-tools": "@^1.9.0",
-    "grpc_tools_node_protoc_ts": "@^4.1.0",
-    "nodemon": "@^2.0.4",
-    "rimraf": "@^3.0.2",
-    "typescript": "@^3.9.7"
+    "@types/dotenv": "^8.2.0",
+    "@types/google-protobuf": "^3.7.2",
+    "@types/node": "^14.0.23",
+    "@types/nodemon": "^1.19.0",
+    "grpc-tools": "^1.9.0",
+    "grpc_tools_node_protoc_ts": "^4.1.0",
+    "nodemon": "^2.0.4",
+    "typescript": "^3.9.7"
   }
 }

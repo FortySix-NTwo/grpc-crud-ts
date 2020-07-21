@@ -1,13 +1,15 @@
 import { Connection, createConnection, getConnection } from "typeorm";
 import ORMConfig from "../ormConfig";
-
+import { stopServer } from "../server/index";
 const PORT = process.env.PG_PORT ? parseInt(process.env.PG_PORT, 10) : 5432;
 
 export const connectDB = async () => {
   let connection: Connection | undefined;
   try {
     connection = getConnection();
-  } catch (error) {}
+  } catch (error) {
+    stopServer(error);
+  }
 
   try {
     if (connection) {
@@ -24,11 +26,14 @@ export const connectDB = async () => {
   }
 };
 
-export const checkDBConnection = async (onError: Function, next?: Function) => {
+export const checkDBConnection = async (
+  onError: Function,
+  stopServer?: Function
+) => {
   try {
     await connectDB();
-    if (next) {
-      next();
+    if (stopServer) {
+      stopServer();
     }
   } catch (error) {
     onError();

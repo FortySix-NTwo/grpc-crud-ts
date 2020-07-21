@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  Index,
-  getRepository,
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Index } from "typeorm";
 
 @Entity({ name: "user" })
 export class User {
@@ -35,26 +29,4 @@ export class User {
 
   @Column({ type: "timestamptz" })
   updatedAt: Date = new Date();
-
-  public static async createUser(
-    fullName: string,
-    userName: string,
-    email: string,
-    password: string,
-    photo?: string
-  ) {
-    const userRepository = getRepository(User);
-    const user = new User();
-    user.fullName = fullName;
-    user.userName = userName;
-    user.email = email;
-    user.hashedPassword = password;
-    if (photo) {
-      user.photo = photo;
-    } else {
-      user.photo = "";
-    }
-    await userRepository.save(user);
-    return user;
-  }
 }
