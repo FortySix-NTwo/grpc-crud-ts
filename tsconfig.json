@@ -6,8 +6,12 @@
     "allowJs": true,
     "esModuleInterop": true,
     "target": "es6",
-    "sourceMap": true
+    "sourceMap": true,
+    "strict": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": true
   },
   "include": ["./src/**/*"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "./build/**/*"]
 }

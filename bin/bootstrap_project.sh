@@ -41,8 +41,8 @@ echo '{
 # Insert Script Commands into package.json file
 sed -i '' -e '$ d' package.json
 echo ',
-"scripts": { 
-    "build": "rimraf ./build && npx tsc --skipLibCheck", 
+"scripts": {
+    "build": "rimraf ./build && npx tsc --skipLibCheck",
     "start": "yarn build && node ./dist/src/index.js",
     "start:dev": "nodemon",
     "gen:protoc": "bash ./bin/protoc_gen_ts.sh"
@@ -190,16 +190,17 @@ nbproject
 public/uploads/*
 !public/uploads/.gitkeep" >> .gitignore && cp .gitignore .dockerignore
 
-# configure tslint.json file
-echo '{
-    "defaultSeverity": "error",
-    "extends": ["tslint:recommended"],
-    "jsRules": {},
-    "rules": {
-        "no-console": false
-    },
-    "rulesDirectory": []
-}' >> tslint.json
+# configure .editorconfig file
+echo 'root = true
+
+[*]
+indent_style = space
+indent_size = 2
+tab_width = 2
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true' >> .editorconfig
 
 # configure tsconfig.json file
 echo '{
@@ -219,7 +220,7 @@ echo '{
 # create an MIT license file
 echo 'MIT License
 
-Copyright (c) [year] [full_name] 
+Copyright (c) [year] [full_name]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
