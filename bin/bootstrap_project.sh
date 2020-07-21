@@ -63,7 +63,7 @@ mkdir -p src/ src/proto/ src/server/ dist/ build/ public/
 # add a .gitkeep file in public folder
 touch public/.gitkeep
 
-# create .proto file
+# create a .proto file
 touch src/proto/api.proto
 
 # add an index.ts in all folders (except bin, dist, build and public)

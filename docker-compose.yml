@@ -2,11 +2,13 @@ version: '3'
 services:
   users-service:
     build:
-      context: ./docker/users-service
+      context: ./
       dockerfile: ./Dockerfile
     image: users-service:latest
+    env_file:
+      - ./.env
     environment:
-      - PORT="${PORT"
+      - PORT="${PORT}"
     depends_on:
       - postgres
     networks:
@@ -15,7 +17,7 @@ services:
       - appdata:/opt/app
     working_dir: /opt/app
     ports:
-      - PORT:PORT
+      - ${PORT}:50052
     restart: always
 
   postgres:
@@ -30,7 +32,7 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
-      - PG_PORT:PG_PORT
+      - ${PG_PORT}:5432
     restart: always
 
 networks:

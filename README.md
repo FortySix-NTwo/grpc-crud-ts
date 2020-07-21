@@ -1,5 +1,7 @@
 # gRPC C.R.U.D API
 
+![logo](public/readme_logo.png)
+
 ## In Node.JS with TypeScript
 
 ### Overview
