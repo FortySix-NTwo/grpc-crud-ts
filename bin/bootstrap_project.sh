@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 ##################################################################################
 ##                    Bootstrap Script for gRPC C.R.U.D. API                    ##
 ##################################################################################
@@ -32,56 +33,63 @@ yarn init -y
 
 # configure nodemon for ts
 echo '{
-    "watch": ["src"],
-    "ext": ".ts,.js",
-    "ignore": [],
-    "exec": "ts-node ./src/index.ts"
+  "watch": ["src"],
+  "ext": ".ts,.js",
+  "ignore": [],
+  "exec": "ts-node ./src/index.ts"
 }' >> nodemon.json
 
 # Insert Script Commands into package.json file
 sed -i '' -e '$ d' package.json
 echo ',
-"scripts": {
-    "build": "rimraf ./build && npx tsc --skipLibCheck",
+  "scripts": {
+    "build": "rimraf ./dist/ && npx tsc --skipLibCheck",
     "start": "yarn build && node ./dist/src/index.js",
-    "start:dev": "nodemon",
-    "gen:protoc": "bash ./bin/protoc_gen_ts.sh"
-    }
+    "test": "jest --forceExit --verbose",
+    "gen:protoc": "bash ./bin/protoc_gen_ts.sh",
+    "gen:certs": "bash ./bin/generate_certs.sh",
+    "start:dev": "nodemon"
+  }
 }' >> package.json
 
 # install dependencies
-yarn add dotenv google-protobuf grpc
+yarn add dotenv google-protobuf grpc typeorm
 
 # install development dependencies
 yarn add -D nodemon rimraf @types/dotenv \
-    @types/google-protobuf @types/node grpc-tools \
-    grpc_tools_node_protoc_ts typescript
+  @types/google-protobuf @types/node-grpc-tools \
+  grpc_tools_node_protoc_ts typescript ts-node
 
 # create folder structure
-mkdir -p src/ src/proto/ src/server/ dist/ build/ public/
+mkdir -p  \
+  build/ certs/ dist/ src/ public/ \
+  src/handler/ src/persistence/ src/proto/ src/server/ src/utilities/ \
+  src/persistence/entity/ src/persistence/migration/ src/proto/user/
 
 # add a .gitkeep file in public folder
 touch public/.gitkeep
 
 # create a .proto file
-touch src/proto/api.proto
+touch src/proto/user/user.proto
 
-# add an index.ts in all folders (except bin, dist, build and public)
+# add an index.ts in all folders (except bin, build, certs, dist and public)
 for folder in $(ls -d */)
 do
 	case "$folder" in
 		# ignore bin folder
 		*"bin"*) ;;
-		# ignore build folder
+    # ignore bin folder
 		*"build"*) ;;
 		# ignore dist folder
 		*"dist"*) ;;
-        # ignore public folder
-        *"public"*) ;;
+    # ignore bin folder
+		*"certs"*) ;;
+    # ignore public folder
+    *"public"*) ;;
 		# default case
 		*) touch $folder/index.ts
 		echo "adding index.ts to $folder"
-        ;;
+    ;;
 	esac
 done
 
@@ -101,10 +109,92 @@ POSTGRES_DB=' >> .env.example && cb .env.example .env
 
 # create a Dockerfile
 echo 'FROM node:14.5.0-alpine3.12
+RUN apt-get update
 COPY . /opt/app
 WORKDIR /opt/app
 RUN yarn
-CMD yarn watch' >> Dockerfile
+ARG PORT
+ENV PORT=$PORT
+CMD yarn build && yarn start' >> Dockerfile
+
+# create docker-compose.yml & docker-compose-test.yml files
+echo '"version: "3"
+services:
+  users-service:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: fortysix-ntwo/grpc-api:1.0
+    init: true
+    env_file:
+      - ./.env
+    environment:
+      - PORT="${PORT}"
+    depends_on:
+      - postgres
+    networks:
+      network:
+      ipv4_address: 172.20.0.2
+    volumes:
+      - appdata:/opt/app
+    working_dir: /opt/app
+    ports:
+      - ${PORT}:50052
+    restart: always
+
+  postgres:
+    image: postgres:12.3-alpine
+    init: true
+    environment:
+      - POSTGRES_USER="${POSTGRES_USER}"
+      - POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
+      - POSTGRES_DB="${POSTGRES_DB}"
+      - PG_PORT="${PG_PORT}"
+    networks:
+      network:
+      ipv4_address: 172.20.0.2
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - ${PG_PORT}:5432
+    restart: always
+
+networks:
+  network:
+    driver: bridge
+    ipam:
+    config:
+      - subnet: 172.20.0.0/16
+
+volumes:
+  postgres:
+  appdata:' >> docker-compose.yml && cp docker-compose.yml docker-compose-test.yml
+
+# create a Makefile
+echo 'NAME := fortysix-ntwo/grpc-api:1.0
+
+up:
+	docker build -t $(NAME) -f Dockerfile .
+	docker-compose rm -fsv
+	docker-compose up --build
+
+stop:
+  docker-compose stop
+
+down:
+  docker-compose down -v
+  docker-compose rm -fsv
+  make docker-clean
+
+test:
+	docker-compose rm -fsv
+	make docker-clean
+	docker-compose -f docker-compose-test.yml up --build --exit-code-from test --abort-on-container-exit
+
+docker-clean:
+	@echo "Delete all untagged/dangling (<none>) images"
+	-docker rmi `docker images -q -f dangling=true` --force
+	-docker volume rm `docker volume ls -f dangling=true -q`' >> Makefile
 
 # create a .gitignore and .dockerignore
 echo "#############################
@@ -124,7 +214,6 @@ results
 # Project Files and Folders #
 #############################
 
-build
 dist
 .cache
 .env
@@ -145,39 +234,17 @@ Icon
 ._*
 
 ############################
-# Packages and Binaries    #
+# Logs                     #
 ############################
 
-*.7z
-*.csv
-*.dat
-*.dmg
-*.gz
-*.iso
-*.jar
-*.rar
-*.tar
-*.zip
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.seed
-*.so
-*.swo
-*.swp
-*.swn
-*.swm
-*.out
-*.pid
-
-############################
-# Logs and databases       #
-############################
-
-.tmp
+logs
 *.log
+yarn-debug.log*
+yarn-error.log*
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
 
 ############################
 # Misc.                    #
@@ -185,8 +252,13 @@ Icon
 
 *#
 ssl
+pids
+*.pid
 .idea
+*.seed
 nbproject
+*.pid.lock
+*.tsbuildinfo
 public/uploads/*
 !public/uploads/.gitkeep" >> .gitignore && cp .gitignore .dockerignore
 
@@ -204,18 +276,39 @@ insert_final_newline = true' >> .editorconfig
 
 # configure tsconfig.json file
 echo '{
-    "compilerOptions": {
-        "outDir": "./dist/",
-        "module": "commonjs",
-        "noImplicitAny": true,
-        "allowJs": true,
-        "esModuleInterop": true,
-        "target": "es6",
-        "sourceMap": true
-    },
-    "include": ["./src/**/*"],
-    "exclude": ["node_modules"]
+  "compilerOptions": {
+    "outDir": "./build",
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "target": "es6",
+    "sourceMap": true,
+    "experimentalDecorators": true
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
 }' >> tsconfig.json
+
+# create a jest.config.js file
+echo 'module.exports = {
+  globals: {
+      "ts-jest": {
+          tsConfig: "tsconfig.json"
+      }
+  },
+  moduleFileExtensions: [
+      "ts",
+      "js"
+  ],
+  transform: {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+  },
+  testMatch: [
+      "**/*.test.(ts|js)"
+  ],
+  testEnvironment: "node"
+};' >> jest.config.js
 
 # create an MIT license file
 echo 'MIT License
@@ -248,7 +341,7 @@ echo '# gRPC C.R.U.D API
 ### Overview
 
 The Following projects details a gRPC Node.JS C.R.U.D. API,
-(i.e create, read, update and delete API), for a Blog app implemented in TypeScript.
+(i.e create, read, update and delete API), which is implemented in TypeScript.
 
 ## License
 

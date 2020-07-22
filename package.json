@@ -6,26 +6,17 @@
   "author": "FortySix-NTwo <jonathankfarber@vivaldi.net>",
   "license": "MIT",
   "scripts": {
-    "build": "npx tsc --skipLibCheck",
-    "start": "npx tsc --skipLibCheck && node ./dist/index.js",
-    "start:dev": "nodemon",
-    "gen:protoc": "bash ./bin/generate_proto_code.sh"
+    "build": "rimraf ./dist/ && npx tsc --skipLibCheck",
+    "start": "yarn build && node ./dist/src/index.js",
+    "test": "jest --forceExit --verbose",
+    "gen:protoc": "bash ./bin/protoc_gen_ts.sh",
+    "gen:certs": "bash ./bin/generate_certs.sh",
+    "start:dev": "nodemon"
   },
   "dependencies": {
     "dotenv": "^8.2.0",
-    "google-protobuf": "^3.12.2",
+    "google-protobuf": "^4.0.0-rc.2",
     "grpc": "^1.24.3",
     "typeorm": "^0.2.25"
-  },
-  "devDependencies": {
-    "@types/dotenv": "^8.2.0",
-    "@types/google-protobuf": "^3.7.2",
-    "@types/node": "^14.0.23",
-    "@types/nodemon": "^1.19.0",
-    "grpc-tools": "^1.9.0",
-    "grpc_tools_node_protoc_ts": "^4.1.0",
-    "nodemon": "^2.0.4",
-    "protoc": "^1.0.4",
-    "typescript": "^3.9.7"
   }
 }
