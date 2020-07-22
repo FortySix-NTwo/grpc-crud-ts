@@ -26,7 +26,7 @@
 ##################################################################################
 
 # initialize git local repo
-git init
+#git init
 
 # initialize package.json file
 yarn init -y
@@ -51,14 +51,6 @@ echo ',
     "start:dev": "nodemon"
   }
 }' >> package.json
-
-# install dependencies
-yarn add dotenv google-protobuf grpc typeorm
-
-# install development dependencies
-yarn add -D nodemon rimraf @types/dotenv \
-  @types/google-protobuf node-grpc-tools \
-  grpc_tools_node_protoc_ts typescript ts-node
 
 # create folder structure
 mkdir -p  \
@@ -346,6 +338,13 @@ The Following projects details a gRPC Node.JS C.R.U.D. API,
 
 [MIT](LICENSE)' >> README.md
 
+# install dependencies
+yarn add dotenv google-protobuf grpc typeorm
+
+# install development dependencies
+yarn add -D @types/dotenv @types/google-protobuf @types/node \
+  grpc-tools grpc_tools_node_protoc_ts typescript ts-node nodemon rimraf 
+
 # add all files to local repo
 git add .
 
@@ -353,7 +352,7 @@ git add .
 git commit -m "Initial Commit - Project Generated With Bash Script"
 
 # tag the release version
-git tag v1.0.0
+#git tag v1.0.0
 
 # build dockerfile
 docker build .
