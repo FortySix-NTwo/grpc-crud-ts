@@ -57,7 +57,7 @@ yarn add dotenv google-protobuf grpc typeorm
 
 # install development dependencies
 yarn add -D nodemon rimraf @types/dotenv \
-  @types/google-protobuf @types/node-grpc-tools \
+  @types/google-protobuf node-grpc-tools \
   grpc_tools_node_protoc_ts typescript ts-node
 
 # create folder structure
@@ -109,7 +109,6 @@ POSTGRES_DB=' >> .env.example && cb .env.example .env
 
 # create a Dockerfile
 echo 'FROM node:14.5.0-alpine3.12
-RUN apt-get update
 COPY . /opt/app
 WORKDIR /opt/app
 RUN yarn
