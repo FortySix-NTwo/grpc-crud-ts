@@ -26,7 +26,7 @@
 ##################################################################################
 
 # initialize git local repo
-#git init
+git init
 
 # initialize package.json file
 yarn init -y
@@ -43,12 +43,12 @@ echo '{
 sed -i '' -e '$ d' package.json
 echo ',
   "scripts": {
+    "test": "jest --forceExit --passWithNoTests --detectOpenHandles",
     "build": "rimraf ./dist/ && npx tsc --skipLibCheck",
     "start": "yarn build && node ./dist/src/index.js",
-    "test": "jest --forceExit --verbose",
+    "start:dev": "nodemon",
     "gen:protoc": "bash ./bin/protoc_gen_ts.sh",
-    "gen:certs": "bash ./bin/generate_certs.sh",
-    "start:dev": "nodemon"
+    "gen:certs": "bash ./bin/generate_certs.sh"
   }
 }' >> package.json
 
@@ -100,8 +100,7 @@ do
 done
 
 # create .env files
-touch .env.test
-touch .env
+touch .env.test && touch .env
 echo '# Node Environment Stage
 NODE_ENV=
 
@@ -112,7 +111,7 @@ HOST=
 # PostgreSQL Database Variables
 POSTGRES_USER=
 POSTGRES_PASSWORD=
-POSTGRES_DB=' >> .env && cb .env.example .env
+POSTGRES_DB=' >> .env && cb .env .env.example
 
 # create a Dockerfile
 echo 'FROM node:14.5.0-alpine3.12
@@ -124,7 +123,7 @@ ENV PORT=$PORT
 CMD yarn build && yarn start' >> Dockerfile
 
 # create docker-compose.yml & docker-compose-test.yml files
-echo '"version: "3"
+echo 'version: "3"
 services:
   users-service:
     build:
@@ -357,8 +356,9 @@ The Following projects details a gRPC Node.JS C.R.U.D. API,
 yarn add dotenv google-protobuf grpc typeorm
 
 # install development dependencies
-yarn add -D @types/dotenv @types/google-protobuf @types/node \
-  grpc-tools grpc_tools_node_protoc_ts typescript ts-node nodemon rimraf
+yarn add -D @types/dotenv @types/google-protobuf @types/node @types/jest \
+  grpc-tools grpc_tools_node_protoc_ts typescript ts-node \
+  nodemon rimraf jest ts-jest
 
 # add all files to local repo
 git add .
@@ -367,7 +367,7 @@ git add .
 git commit -m "Initial Commit - Project Generated With Bash Script"
 
 # tag the release version
-#git tag v1.0.0
+git tag v1.0.0
 
 # build dockerfile
 docker build . -t fortysix-ntwo/grpc-api:1.0

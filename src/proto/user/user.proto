@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+service API {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc GetUsersList(GetUsersListRequest) returns (stream GetUsersListResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+}
+
+message User {
+  int32 id = 1;
+  string fullName = 2;
+  string userName = 3;
+  string email = 4;
+  string hashedPassword = 5;
+  string image = 6;
+}
+
+message GetUserRequest {
+  User id = 1;
+}
+
+message GetUserResponse {
+  User User = 1;
+}
+
+message GetUsersListRequest {
+  User name = 1;
+}
+
+message GetUsersListResponse {}
+
+message UpdateUserRequest {
+  User id = 1;
+}
+
+message UpdateUserResponse {
+  User User = 1;
+}
+
+message CreateUserRequest {
+  User User = 1;
+}
+
+message CreateUserResponse {
+  User User = 1;
+}
+
+message DeleteUserRequest {
+  User id = 1;
+}
+
+message DeleteUserResponse {
+  string string = 1;
+}

@@ -27,17 +27,17 @@ GRPC_TOOLS_NODE_PROTOC="./node_modules/.bin/grpc_tools_node_protoc"
 
 for f in ./src/proto/*; do
     if [ "$(basename "$f")" == "index.ts" ]; then
-        continue
+    continue
     fi
 
-    ${GRPC_TOOLS_NODE_PROTOC} \
+${GRPC_TOOLS_NODE_PROTOC} \
     --js_out=import_style=commonjs,binary:"${f}" \
     --grpc_out="${f}" \
     --plugin=protoc-gen-grpc="${GRPC_TOOLS_NODE_PROTOC_PLUGIN}" \
     -I "${f}" \
     "${f}"/*.proto
 
-    ${GRPC_TOOLS_NODE_PROTOC} \
+${GRPC_TOOLS_NODE_PROTOC} \
     --plugin=protoc-gen-ts="${PROTOC_GEN_TS_PATH}" \
     --ts_out="${f}" \
     -I "${f}" \
