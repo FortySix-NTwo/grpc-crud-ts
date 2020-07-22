@@ -74,18 +74,28 @@ do
     # ignore test folder
 		*"dist"*) ;;
     # ignore test folder
-		*"public"*) touch $folder/.gitkeep
+		*"public"*)
+      touch $folder.gitkeep
       echo "adding index.ts to $folder"
       ;;
+    *"src"*) 
+      for folder in "./src/" 
+      do
+        touch $folder/index.ts
+        echo "adding index.ts to $folder"
+      done
+      ;;
 		# default case
-		*) touch $folder/index.ts
+		*)
+      touch $folder/index.ts
 			echo "adding index.ts to $folder"
-			;;
-	esac 
+      ;;
+    esac
 done
 
 # create .env files
 touch .env.test
+touch .env
 echo '# Node Environment Stage
 NODE_ENV=
 
