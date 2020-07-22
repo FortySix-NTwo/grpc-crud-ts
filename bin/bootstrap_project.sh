@@ -78,8 +78,8 @@ do
       touch $folder.gitkeep
       echo "adding index.ts to $folder"
       ;;
-    *"src"*) 
-      for folder in "./src/" 
+    *"src"*)
+      for folder in
       do
         touch $folder/index.ts
         echo "adding index.ts to $folder"
