@@ -58,9 +58,6 @@ mkdir -p  \
   src/handler/ src/persistence/ src/proto/ src/server/ src/utilities/ \
   src/persistence/entity/ src/persistence/migration/ src/proto/user/
 
-# add a .gitkeep file in public folder
-touch public/.gitkeep
-
 # create a .proto file
 touch src/proto/user/user.proto
 
@@ -68,21 +65,23 @@ touch src/proto/user/user.proto
 for folder in $(ls -d */)
 do
 	case "$folder" in
-		# ignore bin folder
+		# ignore scripts folder
 		*"bin"*) ;;
-    # ignore bin folder
+		# ignore env folder
 		*"build"*) ;;
-		# ignore dist folder
-		*"dist"*) ;;
-    # ignore bin folder
+		# ignore test folder
 		*"certs"*) ;;
-    # ignore public folder
-    *"public"*) ;;
+    # ignore test folder
+		*"dist"*) ;;
+    # ignore test folder
+		*"public"*) touch $folder/.gitkeep
+      echo "adding index.ts to $folder"
+      ;;
 		# default case
 		*) touch $folder/index.ts
-		echo "adding index.ts to $folder"
-    ;;
-	esac
+			echo "adding index.ts to $folder"
+			;;
+	esac 
 done
 
 # create .env files
@@ -343,7 +342,7 @@ yarn add dotenv google-protobuf grpc typeorm
 
 # install development dependencies
 yarn add -D @types/dotenv @types/google-protobuf @types/node \
-  grpc-tools grpc_tools_node_protoc_ts typescript ts-node nodemon rimraf 
+  grpc-tools grpc_tools_node_protoc_ts typescript ts-node nodemon rimraf
 
 # add all files to local repo
 git add .
