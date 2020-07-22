@@ -17,6 +17,7 @@
 ##        for more information regarding bash scripts,                         ##
 ##         please follow this link -> https://www.gnu.org/software/bash/       ##
 #################################################################################
+
 BASEDIR=$(dirname "$0")
 cd "${BASEDIR}"/../
 

@@ -65,59 +65,38 @@ touch src/proto/user/user.proto
 for folder in $(ls -d */)
 do
   case "$folder" in
-		*"bin"*) ;;
-		*"build"*) ;;
-		*"certs"*) ;;
-		*"dist"*) ;;
-		*"public"*)
-      touch $folder/.gitkeep
-      echo "adding .gitkeep to $folder"
+	*"bin"*) ;;
+	*"build"*) ;;
+	*"certs"*) ;;
+	*"dist"*) ;;
+	*"public"*) touch $folder/.gitkeep ;;
+  *"src"*) cd src/
+  for folder in $(ls -d */)
+  do
+    case "$folder" in
+    *"handler"*) touch $folder/index.ts ;;
+    *"persistence"*) touch $folder/index.ts
+    cd persistence/
+    for folder in $(ls -d */)
+    do
+      case "$folder" in
+      *"entity"*) touch $folder/index.ts ;;
+      *"migration"*) touch $folder/index.ts
+      cd ..
       ;;
-    *"src"*)
-      for folder in $(ls src */)
-      do
-        case "$folder" in
-          *"handler"*)
-            touch $folder/index.ts
-            echo "adding index.ts to $folder"
-            ;;
-          *"persistence"*)
-            touch $folder/index.ts
-            echo "adding index.ts to $folder"
-            for folder in $(ls persistence */)
-            do
-              case "$folder" in
-                *"entity"*)
-                  touch $folder/index.ts
-                  echo "adding index.ts to $folder"
-                  ;;
-                *"migration"*)
-                  touch $folder/index.ts
-                  echo "adding index.ts to $folder"
-                  ;;
-              esac
-            done
-            ;;
-          *"proto"*)
-            touch $folder/index.ts
-            echo "adding index.ts to $folder"
-            ;;
-          *"server"*)
-            touch $folder/index.ts
-            echo "adding index.ts to $folder"
-            ;;
-          *"utilities"*)
-            touch $folder/index.ts
-            echo "adding index.ts to $folder"
-            ;;
-        esac
-      done
-      ;;
-		*)
-      touch $folder/index.ts
-			echo "adding index.ts to $folder"
-      ;;
+      esac
+    done
+    ;;
+    *"proto"*) touch $folder/index.ts ;;
+    *"server"*) touch $folder/index.ts ;;
+    *"utilities"*)
+    cd ..
+    ;;
     esac
+  done
+  ;;
+	*) touch $folder/index.ts ;;
+  esac
 done
 
 # create .env files
