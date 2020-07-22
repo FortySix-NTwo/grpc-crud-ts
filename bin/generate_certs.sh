@@ -3,12 +3,12 @@
 #################################################################################
 ##           Generate Certificates for SSL Secure Connection (HTTP/2)          ##
 ## ########################################################################### ##
-##         Usage:                                                              ##
+##  Usage:                                                                     ##
 ##                 Make sure to run all bash-script within the terminal,       ##
 ##                 from service's root folder.                                 ##
 ##                   $ bash ./bin/generate_certs.sh                            ##
 ## ########################################################################### ##
-##     Contact Information:                                                    ##
+##  Contact Information:                                                       ##
 ##      Author:        Jonathan Farber                                         ##
 ##      GitHub:        https://github.com/FortySix-NTwo                        ##
 ##      Twitter:       https://twitter.com/_JonathanFarber                     ##
@@ -33,3 +33,5 @@ openssl genrsa -passout pass:1111 -des3 -out client.key 4096
 openssl req -passin pass:1111 -new -key client.key -out client.csr -subj  "/C=US/ST=WA/L=Seattle/O=Test/OU=Client/CN=localhost"
 openssl x509 -passin pass:1111 -req -days 365 -in client.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out client.crt
 openssl rsa -passin pass:1111 -in client.key -out client.key
+cd ..
+echo "Files have Been Generated Successfully"

@@ -61,13 +61,13 @@ mkdir -p  \
 # create a .proto file
 touch src/proto/user/user.proto
 
-# add an index.ts in all folders (except bin, build, certs, dist and public)
+# create entree level files per each relevant folder
 for folder in $(ls -d */)
 do
   case "$folder" in
 	*"bin"*) ;;
 	*"build"*) ;;
-	*"certs"*) ;;
+	*"certs"*) touch $folder/.gitkeep ;;
 	*"dist"*) ;;
 	*"public"*) touch $folder/.gitkeep ;;
   *"src"*) cd src/
@@ -112,7 +112,7 @@ HOST=
 # PostgreSQL Database Variables
 POSTGRES_USER=
 POSTGRES_PASSWORD=
-POSTGRES_DB=' >> .env.example && cb .env.example .env
+POSTGRES_DB=' >> .env && cb .env.example .env
 
 # create a Dockerfile
 echo 'FROM node:14.5.0-alpine3.12
@@ -370,4 +370,4 @@ git commit -m "Initial Commit - Project Generated With Bash Script"
 #git tag v1.0.0
 
 # build dockerfile
-docker build .
+docker build . -t fortysix-ntwo/grpc-api:1.0

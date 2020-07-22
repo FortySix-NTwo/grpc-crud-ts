@@ -3,12 +3,12 @@
 #################################################################################
 ##              Generate Protocol Buffers Code Files For TypeScript            ##
 #################################################################################
-##         Usage:                                                              ##
+##  Usage:                                                                     ##
 ##                 Make sure to run all bash-script within the terminal,       ##
 ##                 from service's root folder.                                 ##
-##                       $ bash ./scripts/gen-service.sh                       ##
+##                      $ bash ./scripts/gen-service.sh                        ##
 #################################################################################
-##     Contact Information:                                                    ##
+##  Contact Information:                                                       ##
 ##      Author: Jonathan Farber                                                ##
 ##      GitHub:        https://github.com/FortySix-NTwo                        ##
 ##      Twitter:       https://twitter.com/_JonathanFarber                     ##
@@ -26,21 +26,21 @@ GRPC_TOOLS_NODE_PROTOC_PLUGIN="./node_modules/.bin/grpc_tools_node_protoc_plugin
 GRPC_TOOLS_NODE_PROTOC="./node_modules/.bin/grpc_tools_node_protoc"
 
 for f in ./src/proto/*; do
-  if [ "$(basename "$f")" == "index.ts" ]; then
-      continue
-  fi
+    if [ "$(basename "$f")" == "index.ts" ]; then
+        continue
+    fi
 
-  ${GRPC_TOOLS_NODE_PROTOC} \
-      --js_out=import_style=commonjs,binary:"${f}" \
-      --grpc_out="${f}" \
-      --plugin=protoc-gen-grpc="${GRPC_TOOLS_NODE_PROTOC_PLUGIN}" \
-      -I "${f}" \
-      "${f}"/*.proto
+    ${GRPC_TOOLS_NODE_PROTOC} \
+    --js_out=import_style=commonjs,binary:"${f}" \
+    --grpc_out="${f}" \
+    --plugin=protoc-gen-grpc="${GRPC_TOOLS_NODE_PROTOC_PLUGIN}" \
+    -I "${f}" \
+    "${f}"/*.proto
 
-  ${GRPC_TOOLS_NODE_PROTOC} \
-      --plugin=protoc-gen-ts="${PROTOC_GEN_TS_PATH}" \
-      --ts_out="${f}" \
-      -I "${f}" \
-      "${f}"/*.proto
+    ${GRPC_TOOLS_NODE_PROTOC} \
+    --plugin=protoc-gen-ts="${PROTOC_GEN_TS_PATH}" \
+    --ts_out="${f}" \
+    -I "${f}" \
+    "${f}"/*.proto
 
 done
