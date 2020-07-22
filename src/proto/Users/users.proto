@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package UserService;
+
 service API {
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
   rpc GetUsersList(GetUsersListRequest) returns (stream GetUsersListResponse);

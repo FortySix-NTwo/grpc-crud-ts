@@ -1,5 +1,5 @@
-// package: 
-// file: user.proto
+// package: UserService
+// file: users.proto
 
 /* tslint:disable */
 /* eslint-disable */

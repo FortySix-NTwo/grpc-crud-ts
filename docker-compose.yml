@@ -3,7 +3,7 @@ services:
   users-service:
     build:
       context: ./
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.api
     image: fortysix-ntwo/grpc-api:1.0
     init: true
     env_file:
@@ -23,8 +23,13 @@ services:
     restart: always
 
   postgres:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.postgres
     image: postgres:12.3-alpine
     init: true
+    env_file:
+      - ./.env
     environment:
       - POSTGRES_USER="${POSTGRES_USER}"
       - POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"

@@ -3,18 +3,17 @@ services:
   users-service:
     build:
       context: ./
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.api
     image: fortysix-ntwo/grpc-api:1.0
     init: true
     env_file:
-      - ./.env
+      - ./.env.test
     environment:
       - PORT="${PORT}"
     depends_on:
       - postgres
     networks:
-      network:
-      ipv4_address: 172.20.0.2
+      - network
     volumes:
       - appdata:/opt/app
     working_dir: /opt/app
@@ -23,16 +22,20 @@ services:
     restart: always
 
   postgres:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.postgres
     image: postgres:12.3-alpine
     init: true
+    env_file:
+      - ./.env.test
     environment:
       - POSTGRES_USER="${POSTGRES_USER}"
       - POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"
       - POSTGRES_DB="${POSTGRES_DB}"
       - PG_PORT="${PG_PORT}"
     networks:
-      network:
-      ipv4_address: 172.20.0.2
+      - network
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
@@ -42,9 +45,6 @@ services:
 networks:
   network:
     driver: bridge
-    ipam:
-    config:
-      - subnet: 172.20.0.0/16
 
 volumes:
   postgres:

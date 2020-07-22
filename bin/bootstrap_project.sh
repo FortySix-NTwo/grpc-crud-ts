@@ -44,6 +44,7 @@ sed -i '' -e '$ d' package.json
 echo ',
   "scripts": {
     "test": "jest --forceExit --passWithNoTests --detectOpenHandles",
+    "lint": "eslint .",
     "build": "rimraf ./dist/ && npx tsc --skipLibCheck",
     "start": "yarn build && node ./dist/src/index.js",
     "start:dev": "nodemon",
@@ -55,7 +56,7 @@ echo ',
 # create folder structure
 mkdir -p  \
   build/ certs/ dist/ src/ public/ \
-  src/handler/ src/persistence/ src/proto/ src/server/ src/utilities/ \
+  src/handler/ src/persistence/ src/proto/ src/server/ src/test/ src/utilities/ \
   src/persistence/entity/ src/persistence/migration/ src/proto/user/
 
 # create a .proto file
@@ -86,7 +87,7 @@ do
       ;;
       esac
     done
-    ;;
+    touch $folder/index.ts ;;
     *"proto"*) touch $folder/index.ts ;;
     *"server"*) touch $folder/index.ts ;;
     *"utilities"*)
@@ -278,6 +279,43 @@ end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true' >> .editorconfig
+
+# create a .eslintrc.json configuration file
+echo '{
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error",
+    "no-console": "off",
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ]
+  }
+}' >> .eslintrc.json
 
 # configure tsconfig.json file
 echo '{

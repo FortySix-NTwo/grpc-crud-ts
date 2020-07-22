@@ -19,28 +19,17 @@
 #################################################################################
 
 BASEDIR=$(dirname "$0")
-cd "${BASEDIR}"/../
+cd ${BASEDIR}/../
 
-PROTOC_GEN_TS_PATH="./node_modules/.bin/protoc-gen-ts"
-GRPC_TOOLS_NODE_PROTOC_PLUGIN="./node_modules/.bin/grpc_tools_node_protoc_plugin"
-GRPC_TOOLS_NODE_PROTOC="./node_modules/.bin/grpc_tools_node_protoc"
+npx grpc_tools_node_protoc \
+  --js_out=import_style=commonjs,binary:./src/proto/Users \
+  --grpc_out=./src/proto/Users \
+  --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` \
+  ./src/proto/Users/users.proto
 
-for f in ./src/proto/*; do
-    if [ "$(basename "$f")" == "index.ts" ]; then
-    continue
-    fi
+npx protoc \
+  --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts \
+  --ts_out=./src/proto/Users \
+  -I ./src/proto/Users/ \
+  ./src/proto/Users/users.proto
 
-${GRPC_TOOLS_NODE_PROTOC} \
-    --js_out=import_style=commonjs,binary:"${f}" \
-    --grpc_out="${f}" \
-    --plugin=protoc-gen-grpc="${GRPC_TOOLS_NODE_PROTOC_PLUGIN}" \
-    -I "${f}" \
-    "${f}"/*.proto
-
-${GRPC_TOOLS_NODE_PROTOC} \
-    --plugin=protoc-gen-ts="${PROTOC_GEN_TS_PATH}" \
-    --ts_out="${f}" \
-    -I "${f}" \
-    "${f}"/*.proto
-
-done
