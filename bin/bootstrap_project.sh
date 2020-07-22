@@ -64,28 +64,55 @@ touch src/proto/user/user.proto
 # add an index.ts in all folders (except bin, build, certs, dist and public)
 for folder in $(ls -d */)
 do
-	case "$folder" in
-		# ignore scripts folder
+  case "$folder" in
 		*"bin"*) ;;
-		# ignore env folder
 		*"build"*) ;;
-		# ignore test folder
 		*"certs"*) ;;
-    # ignore test folder
 		*"dist"*) ;;
-    # ignore test folder
 		*"public"*)
-      touch $folder.gitkeep
-      echo "adding index.ts to $folder"
+      touch $folder/.gitkeep
+      echo "adding .gitkeep to $folder"
       ;;
     *"src"*)
-      for folder in
+      for folder in $(ls src */)
       do
-        touch $folder/index.ts
-        echo "adding index.ts to $folder"
+        case "$folder" in
+          *"handler"*)
+            touch $folder/index.ts
+            echo "adding index.ts to $folder"
+            ;;
+          *"persistence"*)
+            touch $folder/index.ts
+            echo "adding index.ts to $folder"
+            for folder in $(ls persistence */)
+            do
+              case "$folder" in
+                *"entity"*)
+                  touch $folder/index.ts
+                  echo "adding index.ts to $folder"
+                  ;;
+                *"migration"*)
+                  touch $folder/index.ts
+                  echo "adding index.ts to $folder"
+                  ;;
+              esac
+            done
+            ;;
+          *"proto"*)
+            touch $folder/index.ts
+            echo "adding index.ts to $folder"
+            ;;
+          *"server"*)
+            touch $folder/index.ts
+            echo "adding index.ts to $folder"
+            ;;
+          *"utilities"*)
+            touch $folder/index.ts
+            echo "adding index.ts to $folder"
+            ;;
+        esac
       done
       ;;
-		# default case
 		*)
       touch $folder/index.ts
 			echo "adding index.ts to $folder"
