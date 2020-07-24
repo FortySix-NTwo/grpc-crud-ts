@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --forceExit --passWithNoTests --detectOpenHandles",
-    "build": "rimraf ./dist/ && npx tsc --skipLibCheck",
-    "start": "yarn build && node ./dist/index.js",
+    "build": "rimraf ./build/ && npx tsc --skipLibCheck",
+    "start": "yarn build && node ./build/index.js",
     "start:dev": "nodemon",
     "gen:protoc": "./bin/generate_proto_code.sh",
     "gen:certs": "bash ./bin/generate_certs.sh"
@@ -33,7 +33,7 @@
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.1.3",
-    "ts-node-dev": "^8.10.2",
+    "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   }
 }

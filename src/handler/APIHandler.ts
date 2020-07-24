@@ -17,11 +17,6 @@ class APIHandler implements IAPIService {
   updateUser: IAPIService_IUpdateUser;
   createUser: IAPIService_ICreateUser;
   deleteUser: IAPIService_IDeleteUser;
-  /**
-   * Welcomer Service
-   * @param call
-   * @param callback
-   */
 }
 
 export default {

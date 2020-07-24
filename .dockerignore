@@ -4,18 +4,12 @@
 #############################
 
 node_modules
-.node_history
-lib-cov
-lcov.info
-pids
-logs
-results
+
 
 #############################
 # Project Files and Folders #
 #############################
 
-dist
 .cache
 .env
 .env.test
