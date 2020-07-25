@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 #################################################################################
 ##              Generate Protocol Buffers Code Files For TypeScript            ##
 #################################################################################
@@ -19,17 +18,23 @@
 #################################################################################
 
 BASEDIR=$(dirname "$0")
-cd ${BASEDIR}/../
+cd "${BASEDIR}"/../
 
-npx grpc_tools_node_protoc \
-  --js_out=import_style=commonjs,binary:./src/proto/Users \
-  --grpc_out=./src/proto/Users \
-  --plugin=protoc-gen-grpc=`which grpc_tools_node_protoc_plugin` \
-  ./src/proto/Users/users.proto
+PROTOC_GEN_TS_PATH="./node_modules/.bin/protoc-gen-ts"
+PROTOC_GEN_GRPC_PATH="./node_modules/.bin/grpc_tools_node_protoc_plugin"
+GRPC_TOOLS="./node_modules/.bin/grpc_tools_node_protoc"
 
-npx protoc \
-  --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts \
-  --ts_out=./src/proto/Users \
-  -I ./src/proto/Users/ \
-  ./src/proto/Users/users.proto
+for f in ./src/proto/*; do
+    if [ "$(basename "$f")" == "index.ts" ]; then
+    continue
+    fi
 
+npx "${GRPC_TOOLS}" \
+        --plugin="protoc-gen-ts=${PROTOC_GEN_TS_PATH}" \
+        --plugin="protoc-gen-grpc=${PROTOC_GEN_GRPC_PATH}" \
+        --js_out="import_style=commonjs,binary:${f}" \
+        --ts_out="${f}" \
+        --grpc_out="${f}" \
+        "${f}"/*.proto
+
+done
