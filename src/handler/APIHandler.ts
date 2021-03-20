@@ -8,7 +8,7 @@ import {
   IAPIService_IUpdateUser,
   IAPIService_ICreateUser,
   IAPIService_IDeleteUser,
-} from "../proto/Users/users_grpc_pb";
+} from "../proto/user/users.proto";
 
 class APIHandler implements IAPIService {
   readonly [x: string]: grpc.MethodDefinition<any, any>;
